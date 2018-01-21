@@ -1,24 +1,31 @@
 let name = prompt('Введите имя');
-if (name === '') {
+name = name.trim();
+while (name.length = 0) {
     alert('недопустимое имя');
     name = prompt('Введите имя');
+    name = name.trim();
 }
 let surname = prompt('Введите фамилию');
-if (surname === '') {
+surname  = surname.trim();
+while (surname.length = 0) {
     alert('недопустимая фамилия');
     surname = prompt('Введите фамилию');
+    surname  = surname.trim();
 }
 let lastname = prompt('Введите отчество');
-if (lastname === '') {
+lastname = lastname.trim();
+while (lastname.length = 0) {
     alert('недопустимое отчество');
     lastname = prompt('Введите отчество');
+    lastname = lastname.trim();
 }
 
 let age = prompt('Введите ваш возраст');
 let ageNumber = parseInt(age);
-if (isNaN(ageNumber)) {
+while (isNaN(ageNumber)) {
     alert('Недопустимый возраст');
     age = prompt('Введите ваш возраст');
+    ageNumber = parseInt(age);
 }
 
 function male_female () {
