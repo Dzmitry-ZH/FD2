@@ -1,0 +1,5 @@
+$ cat .gitignore
+# IntellijIdea files
+*.iml
+.idea
+out
