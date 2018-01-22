@@ -1,20 +1,20 @@
 let name = prompt('Введите имя');
 name = name.trim();
-while (name.length = 0) {
+while (!name) {
     alert('недопустимое имя');
     name = prompt('Введите имя');
     name = name.trim();
 }
 let surname = prompt('Введите фамилию');
 surname  = surname.trim();
-while (surname.length = 0) {
+while (!surname) {
     alert('недопустимая фамилия');
     surname = prompt('Введите фамилию');
     surname  = surname.trim();
 }
 let lastname = prompt('Введите отчество');
 lastname = lastname.trim();
-while (lastname.length = 0) {
+while (!lastname) {
     alert('недопустимое отчество');
     lastname = prompt('Введите отчество');
     lastname = lastname.trim();
@@ -39,7 +39,7 @@ function male_female () {
     }
 }
 
-function pensia(x1) {
+function pension(x1) {
     if (x1>60){
         return 'да'
     }
@@ -56,5 +56,5 @@ alert(  'ваше ФИО: ' + name + ' ' + surname + ' ' + lastname + '\n' +
         'ваш возраст в днях: ' + (ageNumber*365) + '\n' +
         'через 5 лет вам будет: '  +(ageNumber+5) + '\n' +
         'ваш пол: ' + male_female() + '\n' +
-        'вы на пенсии: ' + pensia(ageNumber)
+        'вы на пенсии: ' + pension(ageNumber)
         );
