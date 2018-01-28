@@ -1,4 +1,4 @@
-let array = [4, 1, 3, -4, 9, 345, -1, 0];
+let array = [100,99,4, 1, 3, -4, 9, -1, 0];
 
 function compareNumbers(array) {
     let firstMax = array[0];
@@ -14,7 +14,7 @@ function compareNumbers(array) {
         }
 
     });
-    if (secondMax === undefined) {
+    if (secondMax === undefined || secondMax === firstMax) {
         alert('нет 2-го максимального');
     }
 
