@@ -1,8 +1,7 @@
-let number = prompt('Введите число');
-// let little = Number(number);
+let string = prompt('Введите число');
 
-function getUnits(number) {
-    switch (number) {
+function getUnits(string) {
+    switch (string) {
         case ('1'):
             return 'один';
             break;
@@ -36,9 +35,9 @@ function getUnits(number) {
     }
 }
 
-function getDecades(number) {
-    switch (number) {
-        case ('1'):
+function getDecades(string) {
+    switch (string) {
+        case ('10'):
             return 'десять';
             break;
         case('11'):
@@ -68,11 +67,18 @@ function getDecades(number) {
         case ('19'):
             return 'девятнадцать';
             break;
+        case ('0'):
+            return '';
+            break;
+    }
+}
 
+function getTensDecades(string) {
+    switch (string) {
         case ('2'):
             return 'двадцать';
             break;
-        case ('3'):
+        case('3'):
             return 'тридцать';
             break;
         case ('4'):
@@ -99,8 +105,8 @@ function getDecades(number) {
     }
 }
 
-function getHundreds(number) {
-    switch (number) {
+function getHundreds(string) {
+    switch (string) {
         case ('1'):
             return 'сто';
             break;
@@ -134,106 +140,83 @@ function getHundreds(number) {
     }
 }
 
-function getThousands(number) {
-    switch (number) {
-        case ('1'):
-            return 'одна тысяча';
-            break;
-        case ('2'):
-            return 'две тысячи';
-            break;
-        case ('3'):
-            return 'три тысячи';
-            break;
-        case ('4'):
-            return 'четыре тысячи';
-            break;
-        case ('5'):
-            return 'пять тысяч';
-            break;
-        case ('6'):
-            return 'шесть тысяч';
-            break;
-        case ('7'):
-            return 'семь тысяч';
-            break;
-        case ('8'):
-            return 'восемь тысяч';
-            break;
-        case ('9'):
-            return 'девять тысяч';
-            break;
-        case ('0'):
-            return '';
-            break;
+let classes = {
+    'thousands': {
+        '1': "тысяча",
+        '2': "тысячи",
+        '3': "тысяч"
+    },
+    'millions': {
+        '1': "миллион",
+        '2': "миллиона",
+        '3': "миллионов"
     }
-}
-
-// function getDecadesThousands(number) {
-//     switch (number) {
-//         case ('10000'):
-//             return 'десять тысяч';
-//             break;
-//         case ('20000'):
-//             return 'двадцать тысяч';
-//             break;
-//         case ('30000'):
-//             return 'тридцать тысяч';
-//             break;
-//         case ('40000'):
-//             return 'сорок тысяч';
-//             break;
-//         case ('50000'):
-//             return 'пятьдесят тысяч';
-//             break;
-//         case ('60000'):
-//             return 'шестьдесят тысяч';
-//             break;
-//         case ('70000'):
-//             return 'семьдесят тысяч';
-//             break;
-//         case ('80000'):
-//             return 'восемьдесят тысяч';
-//             break;
-//         case ('90000'):
-//             return 'девяносто тысяч';
-//             break;
-//         case ('0'):
-//             return '';
-//             break;
-//     }
-// }
+};
 
 
-if (number.length === 1) {
-    alert(getUnits(number));
-}
-
-if (number.length === 2 && little > 20) {
-    alert(getDecades(number[0]) + ' ' + getUnits(number[1]));
-}
-
-if (number.length === 2 && little < 20) {
-    alert(getDecades(number));
-}
-
-if (number.length === 3) {
-    alert(getHundreds(number[0]) + ' ' + getDecades(number[1]) + ' ' + getUnits(number[2]));
-}
-
-if (number.length === 4) {
-    alert(getThousands(number[0]) + ' ' + getHundreds(number[1]) + ' ' + getDecades(number[2]) + ' ' + getUnits(number[3]));
-}
-
-if (number.length === 5) {
-    alert(getDecades(number[0]) + ' ' + getThousands(number[1]) + ' ' + getHundreds(number[2]) + ' ' + getDecades(number[3]) + ' ' + getUnits(number[4]));
-}
-
-if (number.length === 6) {
-    alert(getHundreds(number[0]) + ' ' + getDecades(number[1]) + ' ' + getThousands(number[2]) + ' ' + getHundreds(number[3]) + ' ' + getDecades(number[4]) + ' ' + getUnits(number[5]));
+function transformToArray(string) {
+    let array = [];
+    for (let i = 0; i < string.length; i++) {
+        array[9 - string.length + i] = string[i];
+    }
+    return array;
 }
 
 
+let transformString = transformToArray(string);
+alert(turningWordsToString(transformString));
+
+
+function turningWordsToString(transformString) {
+    let result;
+    result = stringifyClass(transformString.slice(0, 3), "millions") + " "
+        + stringifyClass(transformString.slice(3, 6), "thousands") + " "
+        + stringifyClass(transformString.slice(6, 9));
+    return result;
+}
+
+
+function stringifyClass(string, classType) {
+    let result = "";
+    if (string[0]) {
+        result += getHundreds(string[0]);
+    }
+
+    let teen = getDecades(+string[1] + string[2]);
+    if (teen) {
+        result += " " + teen;
+    }
+    else {
+        if (string[1]) {
+            result += " " + getTensDecades(string[1]);
+        }
+        if (string[2]) {
+            result += " " + getUnits(string[2]);
+        }
+    }
+
+    if (classType === "thousands") {
+        result = result.replace(/один$/, "одна");
+        result = result.replace(/два$/, "две");
+    }
+
+    if (result && classType) {
+        var className = classes[classType][defineClassCode(string)];
+        result += " " + className;
+    }
+    return result;
+}
+
+
+function defineClassCode(string) {
+
+    let number = Number((string[1] ? string[1] : "") + string[2]);
+    number = (number > 19) ? number % 10 : number;
+
+    if (number === 1) return 1;
+    if (number > 1 && number < 5) return 2;
+    return 3;
+}
 
 
 
