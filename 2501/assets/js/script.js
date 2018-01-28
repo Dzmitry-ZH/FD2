@@ -1,18 +1,26 @@
-let array = [1, -2, 3, -4, -6, -3, 0, -4, 121, 235, -450];
+let array = [1,3, -4, 9, 345, -1];
 
-function compareNumbers(a, b) {
-    if (a > b) {
-        return 1;
-    }
-    if (a < b) {
-        return -1;
+function compareNumbers(array) {
+    let firstMax = array[0];
+    let secondMax = null;
+    array.forEach(function (item) {
+        if (item > firstMax) {
+            secondMax = firstMax;
+            firstMax = item;
+        }
+
+        else if (item > secondMax && item < firstMax) {
+            secondMax = item;
+        }
+
+    });
+    if (secondMax === null){
+        alert ('нет 2-го максимального');
     }
 
-    if (a === b) {
-        return 0;
+    else {
+        alert (secondMax);
     }
-
 }
 
-array.sort(compareNumbers);
-alert(array[array.length - 2]);
+compareNumbers(array);
