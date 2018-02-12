@@ -18,10 +18,10 @@ function Rectangle(a, b) {
         this.b = b;
     }
     this.getA = function () {
-        return a;
+        return this.a;
     }
     this.getB = function () {
-        return b;
+        return this.b;
     }
     this.getSquare = function () {
         return this.a * this.b;
