@@ -1,10 +1,9 @@
 class Shape {
     constructor() {
-        this.name = 'фигура';
     }
 
     getName() {
-        return this.name;
+        return 'фигура';
     }
 }
 
@@ -13,7 +12,11 @@ class Rectangle extends Shape {
         super();
         this.a = a;
         this.b = b;
-        this.name = 'фигура прямоугольник';
+        this.name = ' прямоугольник';
+    }
+
+    getName (){
+        return super.getName() + this.name;
     }
 
     getPerimeter() {
@@ -33,7 +36,7 @@ console.log(rectangle.getName());
 class Square extends Rectangle {
     constructor(a) {
         super();
-        this.name = 'фигура квадрат';
+        this.name = ' квадрат';
         this.a = a;
     }
 
