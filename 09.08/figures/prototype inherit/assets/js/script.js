@@ -1,20 +1,20 @@
 function Shape() {
-    this.name = 'фигура';
+    // this.name = 'фигура';
 }
 
 Shape.prototype.getName = function () {
-    return this.name;
+    return 'фигура';
 }
 
 function Rectangle(a, b) {
     this.a = a;
     this.b = b;
-    this.name = 'фигура прямоугольник';
+    this.name = ' прямоугольник';
 }
 
 Rectangle.prototype = Object.create(Shape.prototype);
 Rectangle.prototype.getName = function () {
-    return this.name;
+    return Shape.prototype.getName() + this.name;
 }
 
 Rectangle.prototype.getPerimeter = function () {
