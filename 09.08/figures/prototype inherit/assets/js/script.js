@@ -32,7 +32,7 @@ console.log(rectangle.getSquare());
 
 function Square(a) {
     this.a = a;
-    this.name = 'фигура квадрат';
+    this.name = ' квадрат';
 }
 
 Square.prototype = Object.create(Rectangle.prototype);
