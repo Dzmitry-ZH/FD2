@@ -19,10 +19,22 @@ select {
     width: 160px;
 }
 
-div:nth-of-type(6) label:nth-of-type(n+2) {
+div:nth-of-type(8) label:nth-of-type(n+2) {
     width: auto;
 }
 
 textarea {
     display: block;
+}
+
+span{
+    position: absolute;
+    top: 20px;
+    left: 400px;
+    transform: scale(1,1);
+    transition: .5s;
+}
+
+.hide{
+   transform: scale(0);
 }

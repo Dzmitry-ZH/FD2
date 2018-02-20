@@ -1,11 +1,13 @@
 var formDef1 =
     [
+        {label: 'Разработчики:', kind: 'longtext', name: 'developers'},
         {label: 'Название сайта:', kind: 'longtext', name: 'sitename'},
         {label: 'URL сайта:', kind: 'longtext', name: 'siteurl'},
-        {label: 'Посетителей в сутки:', kind: 'number', name: 'visitors'},
+        {label: 'Посетителей в сутки:', kind: 'number', name: 'vcreateitors'},
+        {label: 'Дата запуска сайта', kind: 'date', name: 'date'},
         {label: 'E-mail для связи:', kind: 'shorttext', name: 'email'},
         {
-            label: 'Рубрика каталога:', kind: 'combo', name: 'division',
+            label: 'Рубрика каталога:', kind: 'combo', name: 'divcreateion',
             variants: [{text: 'здоровье', value: 1}, {text: 'домашний уют', value: 2}, {
                 text: 'бытовая техника',
                 value: 3
@@ -29,6 +31,48 @@ var formDef2 =
         {label: 'Зарегистрироваться:', kind: 'submit'},
     ];
 
+function checkEmptyInput(event) {
+    if (!event.currentTarget.value) {
+        console.log('Заполните поле ' + event.currentTarget.name);
+        document.getElementsByTagName('span')[0].classList.remove('hide');
+    }
+    else {
+        document.getElementsByTagName('span')[0].classList.add('hide');
+    }
+}
+
+function checkNumberInput(event) {
+    if (isNaN(event.currentTarget.value) || event.currentTarget.value < 0) {
+        console.log('Введите допутимое неотрицательное число в поле' + event.currentTarget.name);
+    }
+    else {
+        console.log('Заполните поле' + event.currentTarget.name);
+    }
+
+}
+
+function checkEmailInput(event) {
+    if (!event.currentTarget.value.match(/^\w+@\w+\.\w{2,}$/)) {
+        console.log('Недопустимый e-mail');
+    }
+}
+
+function checkUrlInput(event) {
+    if (!event.currentTarget.value.match(/^http(s)?\w+\.\w{2,}$/)) {
+        console.log('Неверный url');
+    }
+}
+
+function checkCombo(event) {
+    if (event.currentTarget.value === '0') {
+        console.log('Выберите значение');
+    }
+}
+
+function checkEntireForm(event){
+document.getElementsByTagName('form')[0]
+}
+
 function createForm(array) {
 
     let form = document.createElement('form');
@@ -43,70 +87,102 @@ function createForm(array) {
         let div = document.createElement('div');
         form.appendChild(div);
         if (item.kind !== 'submit') {
-            isLabel(item);
+            createLabel(item, div);
         }
 
         switch (item.kind) {
             case 'longtext':
-                isLongText(item);
+                createLongText(item, div);
                 break;
             case 'shorttext':
-                isShortText(item);
+                createShortText(item, div);
                 break;
             case 'number':
-                isNumber(item);
+                createNumber(item, div);
                 break;
             case 'combo':
-                isCombo(item);
+                createCombo(item, div);
                 break;
             case'radio':
-                isRadio(item);
+                createRadio(item, div);
                 break;
             case 'check':
-                isCheck(item);
+                createCheck(item, div);
                 break;
             case 'memo':
-                isMemo(item);
+                createMemo(item, div);
                 break;
             case 'submit':
-                isSubmit(item);
-                break
+                createSubmit(item, div);
+                break;
+            case 'date':
+                createDate(item, div);
         }
 
 
-        function isLongText(item) {
+        function createLongText(item, div) {
             let longText = document.createElement('input');
             longText.type = 'text';
             longText.name = item.name;
             longText.size = 30;
+            if (item.name === 'siteurl') {
+                longText.addEventListener('blur', checkUrlInput);
+            }
+            else {
+                longText.addEventListener('blur', checkEmptyInput);
+            }
             div.appendChild(longText);
         }
 
-        function isShortText(item) {
+        function createShortText(item, div) {
             let shortText = document.createElement('input');
             shortText.type = 'text';
             shortText.name = item.name;
             shortText.size = 20;
+            if (item.name === 'email') {
+                shortText.addEventListener('blur', checkEmailInput);
+            }
+            else {
+                shortText.addEventListener('blur', checkEmptyInput);
+            }
             div.appendChild(shortText);
         }
 
-        function isLabel(item) {
+        function createLabel(item, div) {
             let label = document.createElement('label');
             let labelText = document.createTextNode(item.label);
             label.appendChild(labelText);
             div.appendChild(label);
         }
 
-        function isNumber(item) {
+        function createNumber(item, div) {
             let number = document.createElement('input');
-            number.type = 'number';
+            // number.type = 'number';
+            number.type = 'text';
+            number.size = 10;
             number.name = item.name;
+            number.addEventListener('blur', checkNumberInput);
             div.appendChild(number);
         }
 
-        function isCombo(item) {
+        function createDate(item, div) {
+            let date = document.createElement('input');
+            date.type = 'date';
+            date.size = 20;
+            date.name = item.name;
+            div.appendChild(date);
+        }
+
+        function createCombo(item, div) {
             let combo = document.createElement('select');
+            let disabledOption = document.createElement('option');
+            let textDisabledOption = document.createTextNode('Выберете значение');
+            disabledOption.value = 0;
+            disabledOption.selected = true;
+            disabledOption.appendChild(textDisabledOption);
+            combo.appendChild(disabledOption);
             combo.name = item.name;
+            combo.addEventListener('change', checkCombo);
             item.variants.forEach(function (item) {
                 let option = document.createElement('option');
                 let textOption = document.createTextNode(item.text);
@@ -117,7 +193,7 @@ function createForm(array) {
             });
         }
 
-        function isRadio(item) {
+        function createRadio(item, div) {
             item.variants.forEach(function (item1, i) {
                 let radio = document.createElement('input');
                 radio.type = 'radio';
@@ -132,7 +208,7 @@ function createForm(array) {
             });
         }
 
-        function isCheck(item) {
+        function createCheck(item, div) {
             let check = document.createElement('input');
             check.type = 'checkbox';
             check.name = item.name;
@@ -140,23 +216,26 @@ function createForm(array) {
             div.appendChild(check);
         }
 
-        function isMemo(item) {
+        function createMemo(item, div) {
             let memo = document.createElement('textarea');
             memo.rows = 5;
             memo.cols = 50;
             memo.name = item.name;
+            memo.addEventListener('blur', checkEmptyInput);
             div.appendChild(memo);
         }
 
-        function isSubmit(item) {
+        function createSubmit(item, div) {
             let submit = document.createElement('input');
             submit.type = 'submit';
             submit.value = item.label;
             div.appendChild(submit);
         }
+
     });
 
 }
+
 
 createForm(formDef1);
 createForm(formDef2);
