@@ -69,10 +69,6 @@ function checkCombo(event) {
     }
 }
 
-function checkEntireForm(event){
-document.getElementsByTagName('form')[0]
-}
-
 function createForm(array) {
 
     let form = document.createElement('form');
