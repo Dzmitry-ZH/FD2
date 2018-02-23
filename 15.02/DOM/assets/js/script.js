@@ -1,81 +1,77 @@
 var formDef1 =
     [
-        {label: 'Разработчики:', kind: 'longtext', name: 'developers'},
-        {label: 'Название сайта:', kind: 'longtext', name: 'sitename'},
-        {label: 'URL сайта:', kind: 'longtext', name: 'siteurl'},
-        {label: 'Посетителей в сутки:', kind: 'number', name: 'vcreateitors'},
+        {label: 'Разработчики:', kind: 'longtext', name: 'developers', validation: 'empty'},
+        {label: 'Название сайта:', kind: 'longtext', name: 'sitename', validation: 'empty'},
+        {label: 'URL сайта:', kind: 'longtext', name: 'siteurl', validation: 'url'},
+        {label: 'Посетителей в сутки:', kind: 'number', name: 'vcreateitors', validation: 'number'},
         {label: 'Дата запуска сайта', kind: 'date', name: 'date'},
-        {label: 'E-mail для связи:', kind: 'shorttext', name: 'email'},
+        {label: 'E-mail для связи:', kind: 'shorttext', name: 'email', validation: 'email'},
         {
-            label: 'Рубрика каталога:', kind: 'combo', name: 'divcreateion',
-            variants: [{text: 'здоровье', value: 1}, {text: 'домашний уют', value: 2}, {
-                text: 'бытовая техника',
-                value: 3
-            }]
+            label: 'Рубрика каталога:', kind: 'combo', name: 'divcreateion', validation: 'combo',
+            variants:
+                [
+                    {text: 'здоровье', value: 1}, {text: 'домашний уют', value: 2}, {text: 'бытовая техника', value: 3}
+                ]
         },
         {
             label: 'Размещение:', kind: 'radio', name: 'payment',
-            variants: [{text: 'бесплатное', value: 1}, {text: 'платное', value: 2}, {text: 'VIP', value: 3}]
+            variants:
+                [
+                    {text: 'бесплатное', value: 1}, {text: 'платное', value: 2}, {text: 'VIP', value: 3}
+                ]
         },
         {label: 'Разрешить отзывы:', kind: 'check', name: 'votes'},
-        {label: 'Описание сайта:', kind: 'memo', name: 'description'},
+        {label: 'Описание сайта:', kind: 'memo', name: 'description', validation: 'empty'},
         {label: 'Опубликовать:', kind: 'submit'},
     ];
 
 var formDef2 =
     [
-        {label: 'Фамилия:', kind: 'longtext', name: 'lastname'},
-        {label: 'Имя:', kind: 'longtext', name: 'firstname'},
-        {label: 'Отчество:', kind: 'longtext', name: 'secondname'},
-        {label: 'Возраст:', kind: 'number', name: 'age'},
+        {label: 'Фамилия:', kind: 'longtext', name: 'lastname', validation: 'empty'},
+        {label: 'Имя:', kind: 'longtext', name: 'firstname', validation: 'empty'},
+        {label: 'Отчество:', kind: 'longtext', name: 'secondname', validation: 'empty'},
+        {label: 'Возраст:', kind: 'number', name: 'age', validation: 'number'},
         {label: 'Зарегистрироваться:', kind: 'submit'},
     ];
 
-function checkEmptyInput(event) {
-    if (!event.currentTarget.value) {
-        console.log('Заполните поле ' + event.currentTarget.name);
-        document.getElementsByTagName('span')[0].classList.remove('hide');
-    }
-    else {
-        document.getElementsByTagName('span')[0].classList.add('hide');
-    }
+var description = {
+    'empty': isEmpty,
+    'url': isUrl,
+    'number': isNumber,
+    'email': isEmail,
+    'combo': isCombo
+};
+
+function isEmpty(value) {
+        if (!value){
+            console.log('пусто');
+        }
 }
 
-function checkNumberInput(event) {
-    if (isNaN(event.currentTarget.value) || event.currentTarget.value < 0) {
-        console.log('Введите допутимое неотрицательное число в поле' + event.currentTarget.name);
-    }
-    else {
-        console.log('Заполните поле' + event.currentTarget.name);
-    }
+function isNumber(value) {
+    return !isNaN(value);
 
 }
 
-function checkEmailInput(event) {
-    if (!event.currentTarget.value.match(/^\w+@\w+\.\w{2,}$/)) {
-        console.log('Недопустимый e-mail');
-    }
+function isEmail(value) {
+    return value.match(/^\w+@\w+\.\w{2,}$/)
 }
 
-function checkUrlInput(event) {
-    if (!event.currentTarget.value.match(/^http(s)?\w+\.\w{2,}$/)) {
-        console.log('Неверный url');
-    }
+function isUrl(value) {
+    return value.match(/http(s)?\w+/)
 }
 
-function checkCombo(event) {
-    if (event.currentTarget.value === '0') {
-        console.log('Выберите значение');
-    }
+function isCombo(value) {
+    return value === 0;
 }
 
-function createForm(array) {
+function createForm(array, name) {
 
     let form = document.createElement('form');
     document.body.appendChild(form);
     form.id = 'dyn_form';
     form.method = 'GET';
-    form.name = 'Форма';
+    form.name = name;
     form.action = 'http://fe.it-academy.by/TestForm.php';
 
     array.forEach(function (item) {
@@ -121,12 +117,7 @@ function createForm(array) {
             longText.type = 'text';
             longText.name = item.name;
             longText.size = 30;
-            if (item.name === 'siteurl') {
-                longText.addEventListener('blur', checkUrlInput);
-            }
-            else {
-                longText.addEventListener('blur', checkEmptyInput);
-            }
+            longText.dataset.validation = item.validation;
             div.appendChild(longText);
         }
 
@@ -135,11 +126,9 @@ function createForm(array) {
             shortText.type = 'text';
             shortText.name = item.name;
             shortText.size = 20;
+            shortText.dataset.validation = item.validation;
             if (item.name === 'email') {
-                shortText.addEventListener('blur', checkEmailInput);
-            }
-            else {
-                shortText.addEventListener('blur', checkEmptyInput);
+                shortText.dataset.validation = 'email';
             }
             div.appendChild(shortText);
         }
@@ -157,7 +146,7 @@ function createForm(array) {
             number.type = 'text';
             number.size = 10;
             number.name = item.name;
-            number.addEventListener('blur', checkNumberInput);
+            number.dataset.validation = item.validation;
             div.appendChild(number);
         }
 
@@ -178,7 +167,7 @@ function createForm(array) {
             disabledOption.appendChild(textDisabledOption);
             combo.appendChild(disabledOption);
             combo.name = item.name;
-            combo.addEventListener('change', checkCombo);
+            combo.dataset.validation = item.validation;
             item.variants.forEach(function (item) {
                 let option = document.createElement('option');
                 let textOption = document.createTextNode(item.text);
@@ -195,6 +184,10 @@ function createForm(array) {
                 radio.type = 'radio';
                 radio.id = i + 1;
                 radio.name = item.name;
+                radio.dataset.validation = item.validation;
+                if (item.name === 'payment') {
+                    radio.dataset.validation = 'payment';
+                }
                 let label = document.createElement('label');
                 label.htmlFor = i + 1;
                 let textRadio = document.createTextNode(item1.text);
@@ -209,6 +202,7 @@ function createForm(array) {
             check.type = 'checkbox';
             check.name = item.name;
             check.checked = true;
+            check.dataset.validation = item.validation;
             div.appendChild(check);
         }
 
@@ -217,7 +211,7 @@ function createForm(array) {
             memo.rows = 5;
             memo.cols = 50;
             memo.name = item.name;
-            memo.addEventListener('blur', checkEmptyInput);
+            memo.dataset.validation = item.validation;
             div.appendChild(memo);
         }
 
@@ -230,8 +224,15 @@ function createForm(array) {
 
     });
 
+    let elements = document.querySelectorAll("[name =" + name + "] [data-validation]");
+    for (let i = 0; i < elements.length; i++) {
+        let validationType = elements[i].getAttribute('data-validation');
+        elements[i].addEventListener('change', function (event) {
+            description[validationType].call(null, event.currentTarget.value);
+        });
+    }
+
 }
 
-
-createForm(formDef1);
-createForm(formDef2);
+createForm(formDef1, 'form1');
+createForm(formDef2, 'form2');

@@ -38,3 +38,6 @@ span{
 .hide{
    transform: scale(0);
 }
+
+[name = form1]{
+}
