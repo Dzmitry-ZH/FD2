@@ -43,9 +43,10 @@ var description = {
 };
 
 function isEmpty(value) {
-        if (!value){
-            console.log('пусто');
-        }
+    if (!value) {
+        console.log('пусто');
+        return true;
+    }
 }
 
 function isNumber(value) {
@@ -62,7 +63,7 @@ function isUrl(value) {
 }
 
 function isCombo(value) {
-    return value === 0;
+
 }
 
 function createForm(array, name) {
@@ -77,6 +78,7 @@ function createForm(array, name) {
     array.forEach(function (item) {
 
         let div = document.createElement('div');
+        form.appendChild(div);
         form.appendChild(div);
         if (item.kind !== 'submit') {
             createLabel(item, div);
@@ -184,10 +186,6 @@ function createForm(array, name) {
                 radio.type = 'radio';
                 radio.id = i + 1;
                 radio.name = item.name;
-                radio.dataset.validation = item.validation;
-                if (item.name === 'payment') {
-                    radio.dataset.validation = 'payment';
-                }
                 let label = document.createElement('label');
                 label.htmlFor = i + 1;
                 let textRadio = document.createTextNode(item1.text);
@@ -202,7 +200,6 @@ function createForm(array, name) {
             check.type = 'checkbox';
             check.name = item.name;
             check.checked = true;
-            check.dataset.validation = item.validation;
             div.appendChild(check);
         }
 
@@ -227,9 +224,22 @@ function createForm(array, name) {
     let elements = document.querySelectorAll("[name =" + name + "] [data-validation]");
     for (let i = 0; i < elements.length; i++) {
         let validationType = elements[i].getAttribute('data-validation');
-        elements[i].addEventListener('change', function (event) {
-            description[validationType].call(null, event.currentTarget.value);
-        });
+        if (validationType) {
+            let span = document.querySelector('span[data-validation =' + validationType + ']').cloneNode(true);
+            span = elements[i].parentNode.appendChild(span);
+            elements[i].addEventListener('blur', function (event) {
+                if (description[validationType].call(null, event.currentTarget.value)) {
+                    setTimeout(function () {
+                        span.classList.remove('hide');
+                    }, 0);
+                }
+                else {
+                    setTimeout(function () {
+                        span.classList.add('hide');
+                    }, 0);
+                }
+            });
+        }
     }
 
 }
