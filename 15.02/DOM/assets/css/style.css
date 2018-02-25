@@ -36,3 +36,8 @@ span{
 .hide{
     transform: scale(0) rotate(70deg) translateX(150px);
 }
+
+.highlight{
+    border: 2px solid red;
+    transition: .5s;
+}

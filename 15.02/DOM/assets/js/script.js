@@ -74,11 +74,14 @@ function isCombo(value) {
 }
 
 function isRadio(value) {
-    console.log(value);
-    console.log(document.forms['form1']['payment']);
-    if (!value) {
-        return true;
-    }
+    // console.log(value);
+    // console.log(document.forms['form1']['payment']);
+    // if (!value) {
+    //     return true;
+    // }
+    // if (!document.forms['form1']['payment'].checked){
+    //     //     return true;
+    //     // }
 }
 
 function createForm(array, name) {
@@ -259,11 +262,13 @@ function createForm(array, name) {
                         setTimeout(function () {
                             span.classList.remove('hide');
                         }, 0);
+                        item.classList.add('highlight');
                     }
                     else {
                         setTimeout(function () {
                             span.classList.add('hide');
                         }, 0);
+                        item.classList.remove('highlight');
                     }
                 }
             )
