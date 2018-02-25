@@ -14,7 +14,7 @@ var formDef1 =
                 ]
         },
         {
-            label: 'Размещение:', kind: 'radio', name: 'payment',
+            label: 'Размещение:', kind: 'radio', name: 'payment', validation: 'radio',
             variants:
                 [
                     {text: 'бесплатное', value: 1}, {text: 'платное', value: 2}, {text: 'VIP', value: 3}
@@ -39,7 +39,8 @@ let description = {
     'url': isUrl,
     'number': isNumber,
     'email': isEmail,
-    'combo': isCombo
+    'combo': isCombo,
+    'radio': isRadio
 };
 
 function isEmpty(value) {
@@ -68,6 +69,14 @@ function isUrl(value) {
 
 function isCombo(value) {
     if (value === '0') {
+        return true;
+    }
+}
+
+function isRadio(value) {
+    console.log(value);
+    console.log(document.forms['form1']['payment']);
+    if (!value) {
         return true;
     }
 }
@@ -189,6 +198,7 @@ function createForm(array, name) {
                 radio.type = 'radio';
                 radio.id = i + 1;
                 radio.name = item.name;
+                radio.dataset.validation = item.validation;
                 let label = document.createElement('label');
                 label.htmlFor = i + 1;
                 let textRadio = document.createTextNode(item1.text);
@@ -221,14 +231,15 @@ function createForm(array, name) {
             submit.value = item.label;
             div.appendChild(submit);
             submit.addEventListener('click', function (event) {
-                let elements = document.querySelectorAll("[name =" + name + "] [data-validation]");
+                let elements = document.querySelectorAll("[name =" + name + "] [data-validation]:not(span)");
                 let change = new Event('change');
                 for (let i = 0; i < elements.length; i++) {
                     elements[i].dispatchEvent(change);
                     let validationType = elements[i].getAttribute('data-validation');
-                    if (description[validationType].call(null, event.currentTarget.value)) {
+                    console.log('Отправка формы: ');
+                    console.dir(elements[i]);
+                    if (description[validationType].call(null, elements[i].value)) {
                         event.preventDefault();
-
                     }
                 }
             });
@@ -260,5 +271,5 @@ function createForm(array, name) {
     });
 }
 
-// createForm(formDef1, 'form1');
+createForm(formDef1, 'form1');
 createForm(formDef2, 'form2');
