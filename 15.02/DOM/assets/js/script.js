@@ -34,7 +34,7 @@ var formDef2 =
         {label: 'Зарегистрироваться:', kind: 'submit'},
     ];
 
-var description = {
+let description = {
     'empty': isEmpty,
     'url': isUrl,
     'number': isNumber,
@@ -44,26 +44,32 @@ var description = {
 
 function isEmpty(value) {
     if (!value) {
-        console.log('пусто');
         return true;
     }
 }
 
 function isNumber(value) {
-    return !isNaN(value);
-
+    if (isNaN(value) || !value || value < 0) {
+        return true;
+    }
 }
 
 function isEmail(value) {
-    return value.match(/^\w+@\w+\.\w{2,}$/)
+    if (!value.match(/^\w+@\w+\.\w{2,}$/)) {
+        return true;
+    }
 }
 
 function isUrl(value) {
-    return value.match(/http(s)?\w+/)
+    if (!value.match(/^http(s)?\w+/)) {
+        return true;
+    }
 }
 
 function isCombo(value) {
-
+    if (value === '0') {
+        return true;
+    }
 }
 
 function createForm(array, name) {
@@ -129,9 +135,6 @@ function createForm(array, name) {
             shortText.name = item.name;
             shortText.size = 20;
             shortText.dataset.validation = item.validation;
-            if (item.name === 'email') {
-                shortText.dataset.validation = 'email';
-            }
             div.appendChild(shortText);
         }
 
@@ -217,32 +220,45 @@ function createForm(array, name) {
             submit.type = 'submit';
             submit.value = item.label;
             div.appendChild(submit);
+            submit.addEventListener('click', function (event) {
+                let elements = document.querySelectorAll("[name =" + name + "] [data-validation]");
+                let change = new Event('change');
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].dispatchEvent(change);
+                    let validationType = elements[i].getAttribute('data-validation');
+                    if (description[validationType].call(null, event.currentTarget.value)) {
+                        event.preventDefault();
+
+                    }
+                }
+            });
         }
 
     });
 
+
     let elements = document.querySelectorAll("[name =" + name + "] [data-validation]");
-    for (let i = 0; i < elements.length; i++) {
-        let validationType = elements[i].getAttribute('data-validation');
+    elements.forEach(function (item) {
+        let validationType = item.getAttribute('data-validation');
         if (validationType) {
             let span = document.querySelector('span[data-validation =' + validationType + ']').cloneNode(true);
-            span = elements[i].parentNode.appendChild(span);
-            elements[i].addEventListener('blur', function (event) {
-                if (description[validationType].call(null, event.currentTarget.value)) {
-                    setTimeout(function () {
-                        span.classList.remove('hide');
-                    }, 0);
+            span = item.parentNode.appendChild(span);
+            item.addEventListener('change', function (event) {
+                    if (description[validationType].call(null, event.currentTarget.value)) {
+                        setTimeout(function () {
+                            span.classList.remove('hide');
+                        }, 0);
+                    }
+                    else {
+                        setTimeout(function () {
+                            span.classList.add('hide');
+                        }, 0);
+                    }
                 }
-                else {
-                    setTimeout(function () {
-                        span.classList.add('hide');
-                    }, 0);
-                }
-            });
+            )
         }
-    }
-
+    });
 }
 
-createForm(formDef1, 'form1');
+// createForm(formDef1, 'form1');
 createForm(formDef2, 'form2');
