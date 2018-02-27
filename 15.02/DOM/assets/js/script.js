@@ -3,11 +3,11 @@ var formDef1 =
         {label: 'Разработчики:', kind: 'longtext', name: 'developers', validation: 'empty'},
         {label: 'Название сайта:', kind: 'longtext', name: 'sitename', validation: 'empty'},
         {label: 'URL сайта:', kind: 'longtext', name: 'siteurl', validation: 'url'},
-        {label: 'Посетителей в сутки:', kind: 'number', name: 'vcreateitors', validation: 'number'},
+        {label: 'Посетителей в сутки:', kind: 'number', name: 'visitors', validation: 'number'},
         {label: 'Дата запуска сайта', kind: 'date', name: 'date'},
         {label: 'E-mail для связи:', kind: 'shorttext', name: 'email', validation: 'email'},
         {
-            label: 'Рубрика каталога:', kind: 'combo', name: 'divcreateion', validation: 'combo',
+            label: 'Рубрика каталога:', kind: 'combo', name: 'division', validation: 'combo',
             variants:
                 [
                     {text: 'здоровье', value: 1}, {text: 'домашний уют', value: 2}, {text: 'бытовая техника', value: 3}
@@ -75,13 +75,9 @@ function isCombo(value) {
 
 function isRadio(value) {
     // console.log(value);
-    // console.log(document.forms['form1']['payment']);
-    // if (!value) {
-    //     return true;
-    // }
-    // if (!document.forms['form1']['payment'].checked){
-    //     //     return true;
-    //     // }
+    if (value === '') {
+        return true;
+    }
 }
 
 function createForm(array, name) {
@@ -201,6 +197,7 @@ function createForm(array, name) {
                 radio.type = 'radio';
                 radio.id = i + 1;
                 radio.name = item.name;
+                radio.value = item1.value;
                 radio.dataset.validation = item.validation;
                 let label = document.createElement('label');
                 label.htmlFor = i + 1;
@@ -239,8 +236,8 @@ function createForm(array, name) {
                 for (let i = 0; i < elements.length; i++) {
                     elements[i].dispatchEvent(change);
                     let validationType = elements[i].getAttribute('data-validation');
-                    console.log('Отправка формы: ');
-                    console.dir(elements[i]);
+                    // console.log('Отправка формы: ');
+                    // console.dir(elements[i]);
                     if (description[validationType].call(null, elements[i].value)) {
                         event.preventDefault();
                     }
@@ -258,7 +255,11 @@ function createForm(array, name) {
             let span = document.querySelector('span[data-validation =' + validationType + ']').cloneNode(true);
             span = item.parentNode.appendChild(span);
             item.addEventListener('change', function (event) {
-                    if (description[validationType].call(null, event.currentTarget.value)) {
+                let value = event.currentTarget.value;
+                if (validationType === 'radio'){
+                    value = document.forms[name][item.name].value;
+                }
+                    if (description[validationType].call(null,value)) {
                         setTimeout(function () {
                             span.classList.remove('hide');
                         }, 0);
