@@ -1,0 +1,43 @@
+form {
+    margin-top: 20px;
+}
+
+label {
+    width: 150px;
+    display: inline-block;
+}
+
+input[type = 'number'] {
+    width: 100px;
+}
+
+div {
+    margin: 2px;
+}
+
+select {
+    width: 160px;
+}
+
+div:nth-of-type(8) label:nth-of-type(n+2) {
+    width: auto;
+}
+
+textarea {
+    display: block;
+}
+
+span{
+    display: inline-block;
+    position: absolute;
+    transition: .5s;
+}
+
+.hide{
+    transform: scale(0) rotate(70deg) translateX(150px);
+}
+
+.highlight{
+    border: 2px solid red;
+    transition: .5s;
+}
