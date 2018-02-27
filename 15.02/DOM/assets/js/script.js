@@ -44,40 +44,28 @@ let description = {
 };
 
 function isEmpty(value) {
-    if (!value) {
-        return true;
-    }
+    return (!value);
 }
 
 function isNumber(value) {
-    if (isNaN(value) || !value || value < 0) {
-        return true;
-    }
+    return (isNaN(value) || !value || value < 0);
 }
 
 function isEmail(value) {
-    if (!value.match(/^\w+@\w+\.\w{2,}$/)) {
-        return true;
-    }
+    return (!value.match(/^\w+@\w+\.\w{2,}$/));
 }
 
 function isUrl(value) {
-    if (!value.match(/^http(s)?\w+/)) {
-        return true;
-    }
+    return (!value.match(/^http(s)?\w+/));
 }
 
 function isCombo(value) {
-    if (value === '0') {
-        return true;
-    }
+    return (value === '0');
 }
 
 function isRadio(value) {
     // console.log(value);
-    if (value === '') {
-        return true;
-    }
+    return (value === '');
 }
 
 function createForm(array, name) {
@@ -255,11 +243,11 @@ function createForm(array, name) {
             let span = document.querySelector('span[data-validation =' + validationType + ']').cloneNode(true);
             span = item.parentNode.appendChild(span);
             item.addEventListener('change', function (event) {
-                let value = event.currentTarget.value;
-                if (validationType === 'radio'){
-                    value = document.forms[name][item.name].value;
-                }
-                    if (description[validationType].call(null,value)) {
+                    let value = event.currentTarget.value;
+                    if (validationType === 'radio') {
+                        value = document.forms[name][item.name].value;
+                    }
+                    if (description[validationType].call(null, value)) {
                         setTimeout(function () {
                             span.classList.remove('hide');
                         }, 0);
