@@ -19,10 +19,10 @@ function ManModel() {
             myView.update();
     };
 
-    this.startTime = function (hour, minute, second) {
-        this.hour = hour + myTimeZone;
-        this.minute = minute;
-        this.second = second;
+    this.startTime = function (time) {
+        this.hour = time.getUTCHours() + myTimeZone;
+        this.minute = time.getUTCMinutes();
+        this.second = time.getUTCSeconds();
     };
 
     this.moveTime = function () {
@@ -93,7 +93,7 @@ function ManControllerButtons() {
 
     this.begin = function () {
         var time = new Date();
-        myModel.startTime(time.getUTCHours(), time.getUTCMinutes(), time.getUTCSeconds());
+        myModel.startTime(time);
         timerStop = setInterval(function () {
             myModel.moveTime();
         }, 1000);
@@ -107,59 +107,28 @@ function ManControllerButtons() {
 }
 
 
-// настройка, инициализация
+function createMVC(timeZone, field) {
+    // настройка, инициализация
 
 // создаём все три компонента
-var watch1 = new ManModel();
-var watch2 = new ManModel();
-var watch3 = new ManModel();
-var watch4 = new ManModel();
-var watch5 = new ManModel();
-var watch6 = new ManModel();
-var view1 = new ManViewWebPage();
-var view2 = new ManViewWebPage();
-var view3 = new ManViewWebPage();
-var view4 = new ManViewWebPage();
-var view5 = new ManViewWebPage();
-var view6 = new ManViewWebPage();
-var controller1 = new ManControllerButtons();
-var controller2 = new ManControllerButtons();
-var controller3 = new ManControllerButtons();
-var controller4 = new ManControllerButtons();
-var controller5 = new ManControllerButtons();
-var controller6 = new ManControllerButtons();
-
-// увязываем компоненты друг с другом
+    let watch = new ManModel();
+    let view = new ManViewWebPage();
+    let controller = new ManControllerButtons();
+    // увязываем компоненты друг с другом
 // указываем компонентам, в каком DOM им работать
-var containerElem1 = document.getElementById('_1');
-var containerElem2 = document.getElementById('_2');
-var containerElem3 = document.getElementById('_3');
-var containerElem4 = document.getElementById('_4');
-var containerElem5 = document.getElementById('_5');
-var containerElem6 = document.getElementById('_6');
-watch1.start(view1,-5);
-watch2.start(view2,0);
-watch3.start(view3,1);
-watch4.start(view4,3);
-watch5.start(view5,9);
-watch6.start(view6,10);
-view1.start(watch1,containerElem1);
-view2.start(watch2,containerElem2);
-view3.start(watch3,containerElem3);
-view4.start(watch4,containerElem4);
-view5.start(watch5,containerElem5);
-view6.start(watch6,containerElem6);
-controller1.start(watch1, containerElem1);
-controller2.start(watch2, containerElem2);
-controller3.start(watch3, containerElem3);
-controller4.start(watch4, containerElem4);
-controller5.start(watch5, containerElem5);
-controller6.start(watch6, containerElem6);
-
+    let containerElem = document.getElementById(field);
+    watch.start(view, timeZone);
+    view.start(watch, containerElem);
+    controller.start(watch, containerElem);
 // инициируем первичное отображение Model во View
-watch1.updateView();
-watch2.updateView();
-watch3.updateView();
-watch4.updateView();
-watch5.updateView();
-watch6.updateView();
+
+    watch.updateView();
+
+}
+
+createMVC(-5,'_1');
+createMVC(0,'_2');
+createMVC(1,'_3');
+createMVC(3,'_4');
+createMVC(9,'_5');
+createMVC(10,'_6');
